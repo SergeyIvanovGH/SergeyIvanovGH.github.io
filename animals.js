@@ -6,8 +6,12 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function print() {
+    console.log(this.obj + ": x: "+this.x +" y: "+this.y);
+}
+
 function Monster() {
-    this.name = "noname";
+    this.obj = "noname";
     this.pixel = getRandomInt(18, 36);
     this.font =  this.pixel + "px serif";
     this.text = "+";
@@ -16,49 +20,50 @@ function Monster() {
     this.vx = getRandomInt(0, 5);
     this.vy = getRandomInt(0, 2);
     this.color = "black";
-    this.show = function() {
-        ctx.font = this.font;
-        ctx.fillStyle = this.color;
-        ctx.fillText(this.text, this.x, this.y);
+}
+
+Monster.prototype.show = function() {
+    ctx.font = this.font;
+    ctx.fillStyle = this.color;
+    ctx.fillText(this.text, this.x, this.y);
+}
+
+Monster.prototype.draw = function() {
+    this.show();
+    this.x += this.vx;
+    this.y += this.vy;
+    if ((this.y + this.vy) > canvas.height || this.y + this.vy < this.pixel) {
+        this.vy = -this.vy;
     }
-    this.print = function() {
-        console.log(this.name + ": x: "+this.x +" y: "+this.y);
-    }
-    this.draw = function() {
-        this.show();
-        this.x += this.vx;
-        this.y += this.vy;
-        if ((this.y + this.vy) > canvas.height || this.y + this.vy < this.pixel) {
-            this.vy = -this.vy;
-        }
-        if ((this.x + this.vx) > (canvas.width - this.pixel) || this.x + this.vx < 0) {
-            this.vx = -this.vx;
-        }
-      //   this.print();
+    if ((this.x + this.vx) > (canvas.width - this.pixel) || this.x + this.vx < 0) {
+        this.vx = -this.vx;
     }
 }
 
 function Cat() {
-    Monster.call(this);
-    this.name = "cat";
+    Monster.call(this)
+    this.obj = "cat";
     this.text = "C";
     this.color = "blue";
 }
 
 function Dog() {
-    Monster.call(this);
-    this.name = "dog";
+    Monster.call(this)
+    this.obj = "dog";
     this.text = "D";
     this.color = "green";
 }
 
 function Rabbit() {
-    Monster.call(this);
-    this.name = "rabbit";
+    Monster.call(this)
+    this.obj = "rabbit";
     this.text = "R";
     this.color = "red";
 }
 
+Cat.prototype = Monster.prototype;
+Dog.prototype = Monster.prototype;
+Rabbit.prototype = Monster.prototype;
 
 var cat1 = new Cat();
 var cat2 = new Cat();
